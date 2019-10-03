@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Spillekorts-træning">
+    <meta name="theme-color" content="#fa923f" />
+    <meta name="description" content="Spillekorts-træning - Træning med spillekort">
+    <meta name="keywords" content="træning, spillekort, work-out">
+    <meta name="author" content="Steffen Larsen">
+    <link rel="stylesheet" href="style.css">
+    <title>Spillekorts-træning</title>
+</head>
+<body>
+    <Main>
+        <section class="game">
+            <div><span class="timer-view">00</span></div>
+            <div class="card"></div>
+            <button class="start">Start!</button>
+            <button class="reset">Stop!</button>
+            <button class="resume">Forsæt!</button>
+            <button class="break">Pause!</button>
+            <div class="description">
+                <p class="des-line">Tryk på start og lav den følgende øvelse i et minut</p>
+                <p class="des-line">Skift øvelse når lyden kommer, tiden kører 3 sekunder over tid, så du kan nå at se hvad du skal.</p>
+            </div>
+        </section>
+    </Main>
+    <script async src="/js/app.js"></script>
+    <script src="nosleep.js"></script>
+    <script>
+        var noSleep = new NoSleep();
+        // Enable wake lock.
+        // (must be wrapped in a user input event handler e.g. a mouse or touch handler)
+        document.addEventListener('click', function enableNoSleep() {
+            document.removeEventListener('click', enableNoSleep, false);
+            noSleep.enable();
+        }, false);
+
+    </script>
+    <script>
+        const cardScreen = document.querySelector('.card');
+        const startButton = document.querySelector('.start');
+        const resetButton = document.querySelector('.reset');
+        const resumeButton = document.querySelector('.resume');
+        const breakButton = document.querySelector('.break');
+        const timeView = document.querySelector('.timer-view');
+        var pause = false;
+
+        // Stopper/pauser/fortsætter funktionerne countdown og random card
+        resetButton.addEventListener('click', function(){
+            timeView.textContent = '00';
+            clearTimeout(stopTime);
+            location.reload();
+        });
+
+        breakButton.addEventListener('click', function () {
+            pause = true;
+            console.log(pause);
+            
+        });
+
+        resumeButton.addEventListener('click', function () {
+            pause = false;
+            console.log(pause);
+        });
+        
+        // Henter et random kort
+        function getRandomCard() {
+            cardScreen.innerHTML = "";
+            const cards = [
+                {
+                    img: "es-hjerter.png",
+                    do: "Pulse Squat"
+                },
+                {
+                    img: "es-spar.png",
+                    do: "Pulse Squat"
+                },
+                {
+                    img: "es-kloer.png",
+                    do: "Pulse Squat"
+                },
+                {
+                    img: "es-ruder.png",
+                    do: "Pulse Squat"
+                },
+                {
+                    img: "toer-hjerter.png",
+                    do: "Push up"
+                },
+                {
+                    img: "toer-spar.png",
+                    do: "Push up"
+                },
+                {
+                    img: "toer-kloer.png",
+                    do: "Push up"
+                },
+                {
+                    img: "toer-ruder.png",
+                    do: "Push up"
+                },
+                {
+                    img: "treer-hjerter.png",
+                    do: "Thrusters"
+                },
+                {
+                    img: "treer-spar.png",
+                    do: "Thrusters"
+                },
+                {
+                    img: "treer-kloer.png",
+                    do: "Thrusters"
+                },
+                {
+                    img: "treer-ruder.png",
+                    do: "Thrusters"
+                },
+                {
+                    img: "fier-hjerter.png",
+                    do: "KB Swing"
+                },
+                {
+                    img: "fier-spar.png",
+                    do: "KB Swing"
+                },
+                {
+                    img: "fier-kloer.png",
+                    do: "KB Swing"
+                },
+                {
+                    img: "fier-ruder.png",
+                    do: "KB Swing"
+                },
+                {
+                    img: "femmer-hjerter.png",
+                    do: "Sit ups"
+                },
+                {
+                    img: "femmer-spar.png",
+                    do: "Sit ups"
+                },
+                {
+                    img: "femmer-kloer.png",
+                    do: "Sit ups"
+                },
+                {
+                    img: "femmer-ruder.png",
+                    do: "Sit ups"
+                },
+                {
+                    img: "sekser-hjerter.png",
+                    do: "Jumping Jack"
+                },
+                {
+                    img: "sekser-spar.png",
+                    do: "Jumping Jack"
+                },
+                {
+                    img: "sekser-kloer.png",
+                    do: "Jumping Jack"
+                },
+                {
+                    img: "sekser-ruder.png",
+                    do: "Jumping Jack"
+                },
+                {
+                    img: "syver-hjerter.png",
+                    do: "Row / Overhead squat"
+                },
+                {
+                    img: "syver-spar.png",
+                    do: "Row / Overhead squat"
+                },
+                {
+                    img: "syver-kloer.png",
+                    do: "Row / Overhead squat"
+                },
+                {
+                    img: "syver-ruder.png",
+                    do: "Row / Overhead squat"
+                },
+                {
+                    img: "otter-hjerter.png",
+                    do: "Planke"
+                },
+                {
+                    img: "otter-spar.png",
+                    do: "Planke"
+                },
+                {
+                    img: "otter-kloer.png",
+                    do: "Planke"
+                },
+                {
+                    img: "otter-ruder.png",
+                    do: "Planke"
+                },
+                {
+                    img: "nier-hjerter.png",
+                    do: "Flutter Kick"
+                },
+                {
+                    img: "nier-spar.png",
+                    do: "Flutter Kick"
+                },
+                {
+                    img: "nier-kloer.png",
+                    do: "Flutter Kick"
+                },
+                {
+                    img: "nier-ruder.png",
+                    do: "Flutter Kick"
+                },
+                {
+                    img: "tier-hjerter.png",
+                    do: "Overhead extension"
+                },
+                {
+                    img: "tier-spar.png",
+                    do: "Overhead extension"
+                },
+                {
+                    img: "tier-kloer.png",
+                    do: "Overhead extension"
+                },
+                {
+                    img: "tier-ruder.png",
+                    do: "Overhead extension"
+                },
+                {
+                    img: "bonde-hjerter.png",
+                    do: "Squatjump m/toe touch"
+                },
+                {
+                    img: "bonde-spar.png",
+                    do: "Squatjump m/toe touch"
+                },
+                {
+                    img: "bonde-kloer.png",
+                    do: "Squatjump m/toe touch"
+                },
+                {
+                    img: "bonde-ruder.png",
+                    do: "Squatjump m/toe touch"
+                },
+                {
+                    img: "dronning-hjerter.png",
+                    do: "Hurtige fødder"
+                },
+                {
+                    img: "dronning-spar.png",
+                    do: "Hurtige fødder"
+                },
+                {
+                    img: "dronning-kloer.png",
+                    do: "Hurtige fødder"
+                },
+                {
+                    img: "dronning-ruder.png",
+                    do: "Hurtige fødder"
+                },
+                {
+                    img: "konge-hjerter.png",
+                    do: "Reverse crunch"
+                },
+                {
+                    img: "konge-spar.png",
+                    do: "Reverse crunch"
+                },
+                {
+                    img: "konge-kloer.png",
+                    do: "Reverse crunch"
+                },
+                {
+                    img: "konge-ruder.png",
+                    do: "Reverse crunch"
+                },
+                {
+                    img: "joker-hjerter.png",
+                    do: "Burpee"
+                },
+                {
+                    img: "joker-kloer.png",
+                    do: "Burpee"
+                },
+                {
+                    img: "joker-ruder.png",
+                    do: "Burpee"
+                },
+            ];
+            
+            var num = Math.floor( Math.random() * cards.length );
+            var img = cards[ num ].img;
+            var doIt = cards[ num ].do;
+            
+            
+            let imgElement = document.createElement('img');
+            imgElement.setAttribute('src', `/cards/${img}`);
+            imgElement.setAttribute('class', 'currentCard');
+            let actionElement = document.createElement('p');
+            actionElement.setAttribute('class', 'currentAction');
+            let action = document.createTextNode(doIt);
+            actionElement.appendChild(action);
+            
+            cardScreen.appendChild(imgElement);
+            cardScreen.appendChild(actionElement);
+            
+        }
+        // Starter funktionerne countdown og random card
+        startButton.addEventListener('click', function(){
+                    Countdown(5);              
+                                    
+        });
+
+        // Starter countdown
+        function Countdown(seconds) {
+            this.sec = seconds;
+            this.mins = seconds > 60? seconds/60 : 0;
+                tick();   
+            function tick() {
+                if (!pause) {               
+                this.sec--;
+                }
+                timeView.textContent = (this.sec < 10 ? '0' : '') + String(this.sec);
+                if( this.sec > 0 ) {
+                    stopTime = setTimeout(tick, 1000);
+                }
+            }
+            var audio = new Audio('/sound/airhorn.mp3');
+            audio.play();
+            getRandomCard();
+        }
+        
+    </script>
+</body>
+</html>
